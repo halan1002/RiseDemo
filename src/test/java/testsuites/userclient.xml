@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="User and Client Suites by package" verbose="1">
+<!--    <test name="User package">-->
+<!--        <packages>-->
+<!--            <package name="testcases.user" />-->
+<!--        </packages>-->
+<!--    </test>-->
+    <test name="client package">
+        <packages>
+            <package name="testcases.client" />
+        </packages>
+    </test>
+</suite>
