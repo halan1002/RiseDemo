@@ -20,7 +20,7 @@ public class CreateNewClient extends BaseClass {
     }
     @Test(priority = 1)
     public static void openClientPage(){
-        implicitWait(10);
+        explicitWait("//span[normalize-space()='Clients']", 10);
         String getClientsMenu = findEleByXPath("//span[normalize-space()='Clients']").getText();
         Assert.assertTrue(getClientsMenu.contains("Clients"), "Clients menu is not available.");
         findEleByXPath("//span[normalize-space()='Clients']").click();
@@ -30,8 +30,7 @@ public class CreateNewClient extends BaseClass {
     @Test(priority = 2)
     public static void createClientContact()  {
         String clientName = txtCompany;
-        implicitWait(10);
-
+       explicitWait("//a[normalize-space()='Add client']", 10);
         findEleByXPath("//a[normalize-space()='Add client']").click();
         WebUI.sleep(3);
         //Check Add Client form displayed
@@ -90,7 +89,7 @@ public class CreateNewClient extends BaseClass {
         //String clientName = txtCompany;
         findEleByXPath("//button[@class='btn-close']").click();
         findEleByXPath("//a[@data-bs-target='#clients_list']").click();
-        implicitWait(10);
+        explicitWait("//div[@id='client-table_filter']//input", 10);
         findEleByXPath("//div[@id='client-table_filter']//input").sendKeys(txtCompany);
         System.out.println(txtCompany);
         WebUI.sleep(2);

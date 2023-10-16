@@ -35,7 +35,8 @@ public class login extends BaseClass {
         //Steps 2
 
         findEleByXPath("//a[normalize-space()='Sign up']").click();
-        implicitWait(5);
+        //implicitWait(5);
+        explicitWait("//p[normalize-space()='Create an account as a new client.']", 5);
         checkElementDisplay("//p[normalize-space()='Create an account as a new client.']", "Step 2: Sign up page is not displayed.");
         //Step 3
         findEleByXPath("//input[@id='first_name']").sendKeys(firstName2);
@@ -115,7 +116,8 @@ public class login extends BaseClass {
         clearTextField("//input[@id='password']");
         //Step 13
         signIn(user2, validPassUser2);
-        implicitWait(10);
+        //implicitWait(10);
+        explicitWait("//span[normalize-space()='Dashboard']",10);
         checkElementDisplay("//span[normalize-space()='Dashboard']", "Step 13 dashboard: Dashboard page is not displayed.");
         String actualfullname = findEleByXPath("//span[@class='user-name ml10']").getText();
         String expectedfullName = firstName2 + " " + lastName2;
@@ -134,7 +136,8 @@ public class login extends BaseClass {
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep14");
         //Step 15
-        implicitWait(5);
+        //implicitWait(5);
+        explicitWait("//input[@id='email']",5);
         clearTextField("//input[@id='email']");
         clearTextField("//input[@id='password']");
         findEleByXPath("//input[@id='email']").sendKeys(user3);
@@ -169,10 +172,12 @@ public class login extends BaseClass {
         //Step 19
         //Actions action = new Actions(driver);
         // action.keyDown(Keys.CONTROL).sendKeys(Keys.F5).build().perform();
-        implicitWait(10);
+        //implicitWait(10);
+        explicitWait("//div[normalize-space()='Client']",10);
         findEleByXPath("//div[normalize-space()='Client']").click();
         WebUI.sleep(5);
         //implicitWait(5);
+        explicitWait("//input[@id='email']",5);
         String txtSetEmail = findEleByXPath("//input[@id='email']").getAttribute("value");
         String txtSetPass = findEleByXPath("//input[@id='password']").getAttribute("value");
         Assert.assertEquals(txtSetEmail, user1, "Step 19: Email is not set correctly.");
@@ -181,7 +186,8 @@ public class login extends BaseClass {
         captureScreenPrint("Login", "LoginStep19");
         //Step 20
         findEleByXPath("//button[normalize-space()='Sign in']").click();
-        implicitWait(10);
+        //implicitWait(10);
+        explicitWait("//span[normalize-space()='Dashboard']",10);
         checkElementDisplay("//span[normalize-space()='Dashboard']", "Step 20: Dashboard page is not displayed.");
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep20");

@@ -4,6 +4,8 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import keyword.WebUI;
 import org.openqa.selenium.*;
 import org.openqa.selenium.io.FileHandler;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -16,13 +18,14 @@ import java.time.Duration;
 public class BaseClass {
     public static WebDriver driver;
 
+
     @BeforeClass
     public static void createDriver() {
 
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @AfterClass
@@ -77,9 +80,9 @@ public class BaseClass {
 
     }
 
-    public static void implicitWait(double second) {
+    /*public static void implicitWait(double second) {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds((long) second));
-    }
+    }*/
     public static void checkElementDisplay(String eleXpath, String message) {
         Boolean actualText = findEleByXPath(eleXpath).isDisplayed();
         Assert.assertTrue(actualText, message);
@@ -89,8 +92,16 @@ public class BaseClass {
         Assert.assertEquals(actualText,expectedMessage, errMessage);
 
     }
+    public static void explicitWait(String eleXPath, long second){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(second));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(eleXPath)));
+        //driver.findElement(By.xpath(eleXPath)).click();
+    }
+
     public static void logout(){
-        implicitWait(10);
+       // implicitWait(10);
+        //Use Explicite wait
+        explicitWait("//span[@class='user-name ml10']",10);
         findEleByXPath("//span[@class='user-name ml10']").click();
         WebUI.sleep(1);
         findEleByXPath("//a[normalize-space()='Sign Out']").click();
