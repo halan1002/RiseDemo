@@ -3,6 +3,7 @@ package common;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import keyword.WebUI;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,7 +18,8 @@ import java.time.Duration;
 
 public class BaseClass {
     public static WebDriver driver;
-
+    public static JavascriptExecutor js = (JavascriptExecutor) driver;
+    //public static Actions action = new Actions(driver);
 
     @BeforeClass
     public static void createDriver() {
@@ -35,9 +37,12 @@ public class BaseClass {
     }
 
     public static WebElement findEleByXPath(String xPath) {
-
         WebElement eleXPath = driver.findElement(By.xpath(xPath));
         return eleXPath;
+    }
+
+    public static void clickElement(String xPath) {
+        driver.findElement(By.xpath(xPath)).click();
     }
 
     public static void signIn(String userName, String password) {
@@ -46,7 +51,7 @@ public class BaseClass {
         String loginTitle = findEleByXPath("//h2[normalize-space()='Sign in']").getText();
         System.out.println(loginTitle);
         Assert.assertTrue(loginTitle.contains("Sign in"), "The page is not loaded fully.");
-       // String userName = findEleByXPath("//div[normalize-space()='admin@demo.com']").getText();
+        // String userName = findEleByXPath("//div[normalize-space()='admin@demo.com']").getText();
         //String password = findEleByXPath("//div[normalize-space()='riseDemo']").getText();
         findEleByXPath("//input[@id='email']").clear();
         findEleByXPath("//input[@id='email']").sendKeys(userName);
@@ -80,33 +85,67 @@ public class BaseClass {
 
     }
 
-    /*public static void implicitWait(double second) {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds((long) second));
-    }*/
+    public static int trimTextConvertToInt(String str) {
+        String newString = str.trim();
+        int convertToInt = Integer.parseInt(newString);
+        return convertToInt;
+    }
+
     public static void checkElementDisplay(String eleXpath, String message) {
         Boolean actualText = findEleByXPath(eleXpath).isDisplayed();
         Assert.assertTrue(actualText, message);
     }
+
+    public static void checkElementNotDisplay(String eleXpath, String message) {
+        Boolean actualText = findEleByXPath(eleXpath).isDisplayed();
+        Assert.assertFalse(actualText, message);
+    }
+
     public static void checkContentMessage(String eleXpath, String expectedMessage, String errMessage) {
         String actualText = findEleByXPath(eleXpath).getText();
-        Assert.assertEquals(actualText,expectedMessage, errMessage);
+        Assert.assertEquals(actualText, expectedMessage, errMessage);
 
     }
-    public static void explicitWait(String eleXPath, long second){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(second));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(eleXPath)));
-        //driver.findElement(By.xpath(eleXPath)).click();
-    }
 
-    public static void logout(){
-       // implicitWait(10);
+    public static void logout() {
+        // implicitWait(10);
         //Use Explicite wait
-        explicitWait("//span[@class='user-name ml10']",10);
+        keyword.WebUI.explicitWait(driver, "//span[@class='user-name ml10']", 10);
         findEleByXPath("//span[@class='user-name ml10']").click();
         WebUI.sleep(1);
         findEleByXPath("//a[normalize-space()='Sign Out']").click();
         WebUI.sleep(3);
         checkElementDisplay("//h2[normalize-space()='Sign in']", "Step 21: Login page is not displayed, user is not logged out successfully. ");
         WebUI.sleep(2);
+    }
+    public static boolean existsElement(String xPath) {
+        try {
+            driver.findElement(By.xpath(xPath));
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+    public static int divideInt(int a, int b) {
+        int result = 0;
+        if (b >= 0) {
+            result = a / b;
+            return result;
+        } else {
+            System.out.println("The data is not valid.");
+            return result;
+        }
+    }
+
+    public static int roundUp(int a, int b) {
+        int result = 0;
+        if (b >= 0) {
+
+            result = (int) Math.ceil((double) a / (double) b);
+            return result;
+        } else {
+            System.out.println("The data is not valid.");
+            return result;
+        }
     }
 }

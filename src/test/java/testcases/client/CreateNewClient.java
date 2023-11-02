@@ -1,8 +1,12 @@
 package testcases.client;
+
 import common.BaseClass;
 
 import keyword.WebUI;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -10,33 +14,40 @@ import org.testng.annotations.Test;
 import java.util.Date;
 import java.util.Set;
 
+import testcases.client.ClientBase;
+
 import static java.lang.Thread.sleep;
+import static testcases.client.ClientBase.openClientPage;
 
-public class CreateNewClient extends BaseClass {
+public class CreateNewClient extends ClientBase {
     protected static String txtCompany = "Client ABC " + new Date();
+
     @BeforeClass
-    public static void signInPage(){
+    public static void navigateToClientPage() {
         signIn("admin@demo.com", "riseDemo");
-    }
-    @Test(priority = 1)
-    public static void openClientPage(){
-        explicitWait("//span[normalize-space()='Clients']", 10);
-        String getClientsMenu = findEleByXPath("//span[normalize-space()='Clients']").getText();
-        Assert.assertTrue(getClientsMenu.contains("Clients"), "Clients menu is not available.");
-        findEleByXPath("//span[normalize-space()='Clients']").click();
-        findEleByXPath("//a[contains(text(),'Clients')]").click();
+        openClientPage();
     }
 
-    @Test(priority = 2)
-    public static void createClientContact()  {
+    @Test(priority = 1, invocationCount=3)//, invocationCount=3
+    public static void createClientContact() {
         String clientName = txtCompany;
-       explicitWait("//a[normalize-space()='Add client']", 10);
-        findEleByXPath("//a[normalize-space()='Add client']").click();
+        WebUI.explicitWait(driver, "//a[normalize-space()='Add client']", 10);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebElement addClientButton = findEleByXPath("//a[normalize-space()='Add client']");
+        js.executeScript("arguments[0].click();", addClientButton);
         WebUI.sleep(3);
         //Check Add Client form displayed
-        String chekAddClientForm=findEleByXPath("(//h4[normalize-space()='Add client'])[1]").getText();
-        System.out.println("On page: "+ chekAddClientForm);
-        Assert.assertTrue(chekAddClientForm.equals("Add client"));
+        WebUI.explicitWait(driver, "//h4[normalize-space()='Add client'][1]", 10);
+//        String chekAddClientForm = findEleByXPath("(//h4[normalize-space()='Add client']").getText();
+//        //WebUI.sleep(30);
+//        System.out.println("On page: " + chekAddClientForm);
+//        Assert.assertTrue(chekAddClientForm.equals("Add client"));
+
+//        WebElement checkAddClientForm = findEleByXPath("(//h4[normalize-space()='Add client'])[1]");
+//        Boolean chekAddClientForm = (Boolean) js.executeScript("arguments[0].isDisplayed();", checkAddClientForm);
+//        Assert.assertTrue(chekAddClientForm,"Add client dialog is not displayed.");
+
+
         findEleByXPath("//input[@id='company_name']").sendKeys(clientName);
         findEleByXPath("//label[@for='created_by']/following-sibling::div").click();
         findEleByXPath("//div[@id='select2-drop']//input").sendKeys("Sara", Keys.ENTER);
@@ -67,6 +78,7 @@ public class CreateNewClient extends BaseClass {
         //Button
         findEleByXPath("//button[@id='save-and-continue-button']").click();
         //Add multiple contacts
+        WebUI.explicitWait(driver, "//input[@id='first_name']", 10);
         findEleByXPath("//input[@id='first_name']").sendKeys("Winbigler");
         findEleByXPath("//input[@id='last_name']").sendKeys("Kalay");
         findEleByXPath("//input[@id='email']").sendKeys("abcd@gmail.com");
@@ -78,23 +90,15 @@ public class CreateNewClient extends BaseClass {
         findEleByXPath("//input[@id='email_login_details']").click();
         findEleByXPath("//button[@id='save-and-add-button']").click();
         findEleByXPath("//form[@id='contact-form']//button[@type='button'][normalize-space()='Close']").click();
-        WebUI.sleep(3);
-        //driver.switchTo().alert().dismiss();
+        //WebUI.sleep(30);
 
-    }
+        WebElement closeButton = findEleByXPath("//button[@class='btn-close']");
+        System.out.println("Close button is displayed: " + closeButton.isDisplayed());
 
-   @Test(priority = 3)
-    //Search the created client
-    public static void searchClient() {
-        //String clientName = txtCompany;
-        findEleByXPath("//button[@class='btn-close']").click();
-        findEleByXPath("//a[@data-bs-target='#clients_list']").click();
-        explicitWait("//div[@id='client-table_filter']//input", 10);
-        findEleByXPath("//div[@id='client-table_filter']//input").sendKeys(txtCompany);
-        System.out.println(txtCompany);
-        WebUI.sleep(2);
-        String results = findEleByXPath("//a[normalize-space()='" + txtCompany + "']").getText();
-        Assert.assertTrue(results.equals(txtCompany), "The Client was added successfully");
+        js.executeScript("arguments[0].click();", closeButton);
+//        WebUI.sleep(5);
+//        driver.switchTo().alert().dismiss();
+        searchCreatedClient(txtCompany);
 
     }
 

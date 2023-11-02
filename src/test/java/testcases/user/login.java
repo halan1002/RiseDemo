@@ -33,28 +33,28 @@ public class login extends BaseClass {
         driver.get(url);
         WebUI.sleep(2);
         //Steps 2
-
-        findEleByXPath("//a[normalize-space()='Sign up']").click();
+        clickElement("//a[normalize-space()='Sign up']");
+        //findEleByXPath("//a[normalize-space()='Sign up']").click();
         //implicitWait(5);
-        explicitWait("//p[normalize-space()='Create an account as a new client.']", 5);
+        WebUI.explicitWait(driver, "//p[normalize-space()='Create an account as a new client.']", 5);
         checkElementDisplay("//p[normalize-space()='Create an account as a new client.']", "Step 2: Sign up page is not displayed.");
         //Step 3
         findEleByXPath("//input[@id='first_name']").sendKeys(firstName2);
         findEleByXPath("//input[@id='last_name']").sendKeys(lastName2);
-        findEleByXPath("//label[normalize-space()='Individual']").click();
+        clickElement("//label[normalize-space()='Individual']");
         WebUI.sleep(2);
         Boolean eleCompany = findEleByXPath("//input[@id='company_name']").isDisplayed();
         Assert.assertFalse(eleCompany, "Step 3: The Company field should not be displayed.");
         captureScreenPrint("Login", "LoginStep3");
         //Step 4
-        findEleByXPath("//label[normalize-space()='Organization']").click();
+        clickElement("//label[normalize-space()='Organization']");
         findEleByXPath("//input[@id='company_name']").sendKeys(clientName1);
         WebUI.sleep(2);
         //Step 5
         findEleByXPath("//input[@id='email']").sendKeys(user1);
         findEleByXPath("//input[@id='password']").sendKeys(passUser1);
         findEleByXPath("//input[@id='retype_password']").sendKeys(invalidPassUser2);
-        findEleByXPath("//button[normalize-space()='Sign up']").click();
+        clickElement("//button[normalize-space()='Sign up']");
         WebUI.sleep(2);
         checkContentMessage("//span[@id='retype_password-error']", "Please enter the same value again.", "Step 5: The error message displayed incorrectly.");
         WebUI.sleep(2);
@@ -66,7 +66,8 @@ public class login extends BaseClass {
         findEleByXPath("//input[@id='email']").sendKeys(user1);
         findEleByXPath("//input[@id='password']").sendKeys(passUser1);
         findEleByXPath("//input[@id='retype_password']").sendKeys(passUser1);
-        findEleByXPath("//button[normalize-space()='Sign up']").click();
+        clickElement("//button[normalize-space()='Sign up']");
+        WebUI.explicitWait(driver, "//div[@class='app-alert-message']", 10);
         checkContentMessage("//div[@class='app-alert-message']", "Account already exists for your email address. Sign in", "Step 5: The error message displayed incorrectly.");
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep6");
@@ -74,15 +75,18 @@ public class login extends BaseClass {
         clearTextField("//input[@id='email']");
         clearTextField("//input[@id='password']");
         clearTextField("//input[@id='retype_password']");
-        findEleByXPath("//button[normalize-space()='Sign up']").click();
+        clickElement("//button[normalize-space()='Sign up']");
+        WebUI.explicitWait(driver, "//span[@id='email-error']", 10);
         checkContentMessage("//span[@id='email-error']", "This field is required.", "Step 7 Email: The error message displayed incorrectly.");
+        WebUI.explicitWait(driver, "//span[@id='password-error']", 10);
         checkContentMessage("//span[@id='password-error']", "This field is required.", "Step 7 Password: The error message displayed incorrectly.");
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep7");
         //Step 8
         findEleByXPath("//input[@id='email']").sendKeys(user2);
         findEleByXPath("//input[@id='password']").sendKeys(invalidPassUser2);
-        findEleByXPath("//button[normalize-space()='Sign up']").click();
+        clickElement("//button[normalize-space()='Sign up']");
+        WebUI.explicitWait(driver, "//span[@id='password-error']", 10);
         checkContentMessage("//span[@id='password-error']", "Please enter at least 6 characters.", "Step 8 Password: The error message displayed incorrectly.");
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep8");
@@ -97,7 +101,7 @@ public class login extends BaseClass {
         //Step 10
         clearTextField("//input[@id='retype_password']");
         findEleByXPath("//input[@id='retype_password']").sendKeys(validPassUser2);
-        findEleByXPath("//button[normalize-space()='Sign up']").click();
+        clickElement("//button[normalize-space()='Sign up']");
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep10Temp");
         checkContentMessage("//div[@class='app-alert-message']", "Your account has been created successfully! Sign in", "Step 10: The error message displayed incorrectly.");
@@ -111,13 +115,13 @@ public class login extends BaseClass {
     public static void login() {
         WebUI.sleep(2);
         //Step 11, 12
-        findEleByXPath("//a[normalize-space()='Sign in']").click();
+        clickElement("//a[normalize-space()='Sign in']");
         clearTextField("//input[@id='email']");
         clearTextField("//input[@id='password']");
         //Step 13
         signIn(user2, validPassUser2);
         //implicitWait(10);
-        explicitWait("//span[normalize-space()='Dashboard']",10);
+        WebUI.explicitWait(driver, "//span[normalize-space()='Dashboard']",10);
         checkElementDisplay("//span[normalize-space()='Dashboard']", "Step 13 dashboard: Dashboard page is not displayed.");
         String actualfullname = findEleByXPath("//span[@class='user-name ml10']").getText();
         String expectedfullName = firstName2 + " " + lastName2;
@@ -130,19 +134,19 @@ public class login extends BaseClass {
         clearTextField("//input[@id='password']");
         findEleByXPath("//input[@id='email']").sendKeys(user1);
         findEleByXPath("//input[@id='password']").sendKeys(invalidPassUser2);
-        findEleByXPath("//button[normalize-space()='Sign in']").click();
+        clickElement("//button[normalize-space()='Sign in']");
         WebUI.sleep(1);
         checkContentMessage("//div[@role='alert']", "Authentication failed!", "Step 14: The error message is not correct.");
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep14");
         //Step 15
         //implicitWait(5);
-        explicitWait("//input[@id='email']",5);
+        WebUI.explicitWait(driver, "//input[@id='email']",5);
         clearTextField("//input[@id='email']");
         clearTextField("//input[@id='password']");
         findEleByXPath("//input[@id='email']").sendKeys(user3);
         findEleByXPath("//input[@id='password']").sendKeys(validPassUser2);
-        findEleByXPath("//button[normalize-space()='Sign in']").click();
+        clickElement("//button[normalize-space()='Sign in']");
         WebUI.sleep(2);
         checkContentMessage("//div[@role='alert']", "Authentication failed!", "Step 15: The error message is not correct.");
         WebUI.sleep(2);
@@ -158,14 +162,14 @@ public class login extends BaseClass {
         captureScreenPrint("Login", "LoginStep16");
         //Step 17
         clearTextField("//input[@id='email']");
-        findEleByXPath("//input[@id='password']").click();
+        clickElement("//input[@id='password']");
         checkContentMessage("//span[@id='email-error']", "This field is required.", "Step 17: The error message is not correct.");
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep17");
         //Step 18
         findEleByXPath("//input[@id='email']").sendKeys(user1);
         clearTextField("//input[@id='password']");
-        findEleByXPath("//button[normalize-space()='Sign in']").click();
+        clickElement("//button[normalize-space()='Sign in']");
         WebUI.sleep(1);
         checkContentMessage("//span[@id='password-error']", "This field is required.", "Step 18: The error message is not correct.");
         captureScreenPrint("Login", "LoginStep18");
@@ -173,11 +177,11 @@ public class login extends BaseClass {
         //Actions action = new Actions(driver);
         // action.keyDown(Keys.CONTROL).sendKeys(Keys.F5).build().perform();
         //implicitWait(10);
-        explicitWait("//div[normalize-space()='Client']",10);
-        findEleByXPath("//div[normalize-space()='Client']").click();
+        WebUI.explicitWait(driver, "//div[normalize-space()='Client']",10);
+        clickElement("//div[normalize-space()='Client']");
         WebUI.sleep(5);
         //implicitWait(5);
-        explicitWait("//input[@id='email']",5);
+        WebUI.explicitWait(driver, "//input[@id='email']",5);
         String txtSetEmail = findEleByXPath("//input[@id='email']").getAttribute("value");
         String txtSetPass = findEleByXPath("//input[@id='password']").getAttribute("value");
         Assert.assertEquals(txtSetEmail, user1, "Step 19: Email is not set correctly.");
@@ -185,9 +189,9 @@ public class login extends BaseClass {
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep19");
         //Step 20
-        findEleByXPath("//button[normalize-space()='Sign in']").click();
+        clickElement("//button[normalize-space()='Sign in']");
         //implicitWait(10);
-        explicitWait("//span[normalize-space()='Dashboard']",10);
+        WebUI.explicitWait(driver, "//span[normalize-space()='Dashboard']",10);
         checkElementDisplay("//span[normalize-space()='Dashboard']", "Step 20: Dashboard page is not displayed.");
         WebUI.sleep(2);
         captureScreenPrint("Login", "LoginStep20");
